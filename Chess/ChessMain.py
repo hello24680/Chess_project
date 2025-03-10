@@ -1,0 +1,98 @@
+import pygame as p
+
+from Chess import ChessEngine
+
+WIDTH = HEIGHT = 512 # tong chieu dai va chieu rong cua ca cai bang
+DIMENSION = 8 # so o can thiet cho moi hang
+SQ_SIZE = HEIGHT // DIMENSION # chieu dai va chieu rong o vuong
+MAX_FPS = 15 # dung cho animation , so buc hinh/ giay
+IMAGES = {} # dictionary cho images
+
+'''
+khoi tao images
+'''
+def loadImages():
+    pieces = ['wp', 'wR', 'wN', 'wB', 'wK', 'wQ', 'bp', 'bR', 'bN', 'bB', 'bK', 'bQ']
+    # vong lap load images
+    for piece in pieces:
+        IMAGES[piece] =p.transform.scale(p.image.load("images/" + piece + ".png"),(SQ_SIZE,SQ_SIZE))
+
+
+
+'''
+handle user input va update graphics
+'''
+
+def main():
+    p.init() # khoi tao cac module cua thu vien pygame
+    screen = p.display.set_mode((WIDTH,HEIGHT)) # tao screen
+    clock = p.time.Clock() # khởi tạo đồng hồ để theo dõi thời gian giữa các khung hình
+    screen.fill(p.Color("white")) #Tô nền cho man hinh
+    gs = ChessEngine.GameState() # khoi tao class GameState va gan vao bien 'gs'
+    loadImages() #khoi tao load image
+    running = True
+    while running: #hàm chạy trong suốt quá trình game chạy
+        for e in p.event.get():
+            if e.type == p.QUIT:
+                running = False
+        drawGameState(screen, gs) #goi ham drawgamestate
+        clock.tick(MAX_FPS)
+        p.display.flip() #cập nhật lại màn hình khi có sự thay đổi
+
+
+'''
+khoi tao graphics and GameState
+'''
+def drawGameState(screen, gs):
+    drawBoard(screen)
+    drawPieces(screen, gs.board)
+
+
+
+'''
+ve cac o vuong tren bang:
+
+WIDTH = HEIGHT = 512 # tong chieu dai va chieu rong cua ca cai bang
+DIMENSION = 8 # so o can thiet cho moi hang
+SQ_SIZE = HEIGHT // DIMENSION # chieu dai va chieu rong o vuong
+'''
+def drawBoard(screen):
+    for row in range(8):
+        for col in range(8):
+            if ((row + col)%2) == 0: #tạo đan xen 2 màu theo hàng và cột
+                p.draw.rect(screen,"white", (col*SQ_SIZE, row*SQ_SIZE, SQ_SIZE, SQ_SIZE))
+            else:
+                p.draw.rect(screen, "gray", (col*SQ_SIZE, row*SQ_SIZE, SQ_SIZE, SQ_SIZE))
+
+
+'''
+draw cac quan co
+
+IMAGES = {} # dictionary cho images
+'''
+def drawPieces(screen,board):
+
+    ## code drawPieces o buoc khoi tao
+    # Whitepieces = ['wR', 'wN', 'wB', 'wK', 'wQ','wB', 'wN', 'wR']
+    # Blackpieces = ['bR', 'bN', 'bB', 'bK', 'bQ', 'bB', 'bN', 'bR']
+    #
+    # for row in range(8):
+    #     screen.blit(IMAGES[Whitepieces[row]],(row*SQ_SIZE, SQ_SIZE))
+    #     screen.blit(IMAGES['wp'], (row*SQ_SIZE, 2*SQ_SIZE))
+    #
+    #     screen.blit(IMAGES['bp'], (row*SQ_SIZE, 7*SQ_SIZE))
+    #     screen.blit(IMAGES[Blackpieces[row]], (row*SQ_SIZE, 8*SQ_SIZE))
+
+    ##code drawPieces o buoc khoi tao + cac trang thai khi running
+    for row in range(DIMENSION):
+        for col in range(DIMENSION):
+            piece = board[row][col]
+            if piece != "--": #not empty place
+                screen.blit(IMAGES[piece],p.Rect(col*SQ_SIZE, row*SQ_SIZE, SQ_SIZE,SQ_SIZE))
+
+
+if __name__ == "__main__":
+    main()
+
+
+
