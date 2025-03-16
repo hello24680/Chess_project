@@ -31,10 +31,42 @@ def main():
     gs = ChessEngine.GameState() # khoi tao class GameState va gan vao bien 'gs'
     loadImages() #khoi tao load image
     running = True
+
+    #keep track of the last click of the user (tuple: (rpw,col))
+    sqSelected = ()
+    #keep track of the player clicks (two tuple)
+    playerClicks = []
+
     while running: #hàm chạy trong suốt quá trình game chạy
         for e in p.event.get():
             if e.type == p.QUIT:
                 running = False
+            elif e.type == p.MOUSEBUTTONDOWN:
+                location = p.mouse.get_pos() #(x,y) location of mouse
+
+                # lay vi tri o vuong (so nguyen)
+                col = location[0] // SQ_SIZE
+                row = location[1] // SQ_SIZE
+
+                #check location selected
+                if sqSelected == (row,col): #vi tri cu => undo select
+                    # reset player click
+                    sqSelected = ()
+                    playerClicks = []
+                else:
+                    sqSelected = (row,col)
+                    playerClicks.append(sqSelected)
+
+                # check the second click
+                if len(playerClicks) == 2:
+                    #call move class
+                    move = ChessEngine.Move(playerClicks[0], playerClicks[1], gs.board)
+                    print(move.getChessNotation())
+                    gs.makeMove(move)
+
+                    sqSelected = () #reset user clicks
+                    playerClicks = [] #reset array for next move choice
+
         drawGameState(screen, gs) #goi ham drawgamestate
         clock.tick(MAX_FPS)
         p.display.flip() #cập nhật lại màn hình khi có sự thay đổi
