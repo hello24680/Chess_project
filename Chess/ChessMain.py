@@ -37,6 +37,10 @@ def main():
     #keep track of the player clicks (two tuple)
     playerClicks = []
 
+    # all valid move variable
+    validMoves = gs.getValidMoves()
+    moveMade = False  # flag variable for when a move id made
+
     while running: #hàm chạy trong suốt quá trình game chạy
         for e in p.event.get():
             if e.type == p.QUIT:
@@ -62,10 +66,30 @@ def main():
                     #call move class
                     move = ChessEngine.Move(playerClicks[0], playerClicks[1], gs.board)
                     print(move.getChessNotation())
-                    gs.makeMove(move)
+
+
+                    # #*print all valid move to debug
+                    # for i in validMoves:
+                    #     print(i.startRow,i.startCol , i.endRow,i.endCol)
+
+                    # check valid moves to make moves
+                    if move in validMoves:
+                        gs.makeMove(move)
+                        moveMade = True
 
                     sqSelected = () #reset user clicks
                     playerClicks = [] #reset array for next move choice
+
+            # key handlers
+            elif e.type == p.KEYDOWN: #check a key button
+                if e.key == p.K_b and len(gs.moveLog) != 0:
+                    gs.undoMove()
+                    moveMade = True
+
+        #if a move is made then regenerate all the validmoves for the next move
+        if moveMade:
+            validMoves = gs.getValidMoves()
+            moveMade = False
 
         drawGameState(screen, gs) #goi ham drawgamestate
         clock.tick(MAX_FPS)
