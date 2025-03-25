@@ -103,20 +103,234 @@ class GameState():
                 moves.append(Move((r, c), (r-1, c), self.board))
 
 
-    def getRookMoves(self, r,c,moves,turn):
-        pass
 
-    def getKnightMoves(self, r,c,moves,turn):
-        pass
+    def getRookMoves(self, r, c, moves, turn):
+        # kiem tra row phia ben trai
+        for i in range(len(self.board)):
+            # bỏ qua chính bản thân nó => nếu không sẽ luôn vào elif self.board[r][c-i][0] == "b" (dong 164) và break
+            if i == 0:
+                continue
 
-    def getBishopMoves(self, r,c,moves,turn):
-        pass
+            if (c - i) >= 0:  # kiem tra toi bien gioi chua
+                if turn == "w":  # kiem tra turn (phe cua quan co)
+                    if self.board[r][c - i] == "--":  # neu o trong thi append
+                        moves.append(Move((r, c), (r, c - i), self.board))
+                    elif self.board[r][c - i][0] == "b":  # neu quan doi phuong thi append xong break
+                        moves.append(Move((r, c), (r, c - i), self.board))
+                        break
+                    elif self.board[r][c - i][0] == "w":  # neu quan phe minh thi chi break khong append
+                        break
+                elif turn == "b":
+                    if self.board[r][c - i] == "--":  # neu o trong thi append
+                        moves.append(Move((r, c), (r, c - i), self.board))
+                    elif self.board[r][c - i][0] == "w":  # neu quan doi phuong thi append xong break
+                        moves.append(Move((r, c), (r, c - i), self.board))
+                        break
+                    elif self.board[r][c - i][0] == "b":  # neu quan phe minh thi chi break khong append
+                        break
+            else:
+                break
 
-    def getQueenMoves(self, r,c,moves,turn):
-        pass
+        # kiem tra row phia ben phai
+        for i in range(len(self.board)):
+            if i == 0:
+                continue
 
-    def getKingMoves(self, r,c,moves,turn):
-        pass
+            if (c + i) <= 7:
+                if turn == "w":  # kiem tra turn (phe cua quan co)
+                    if self.board[r][c + i] == "--":  # neu o trong thi append
+                        moves.append(Move((r, c), (r, c + i), self.board))
+                    elif self.board[r][c + i][0] == "b":  # neu quan doi phuong thi append xong break
+                        moves.append(Move((r, c), (r, c + i), self.board))
+                        break
+                    elif self.board[r][c + i][0] == "w":  # neu quan phe minh thi chi break khong append
+                        break
+                elif turn == "b":
+                    if self.board[r][c + i] == "--":  # neu o trong thi append
+                        moves.append(Move((r, c), (r, c + i), self.board))
+                    elif self.board[r][c + i][0] == "w":  # neu quan doi phuong thi append xong break
+                        moves.append(Move((r, c), (r, c + i), self.board))
+                        break
+                    elif self.board[r][c + i][0] == "b":  # neu quan phe minh thi chi break khong append
+                        break
+                else:
+                    break
+
+        # kiem tra col phia ben tren
+        for i in range(len(self.board[r])):
+            if i == 0:
+                continue
+
+            if (r - i) >= 0:
+                if turn == "w":  # kiem tra turn (phe cua quan co)
+                    if self.board[r - i][c] == "--":  # neu o trong thi append
+                        moves.append(Move((r, c), (r - i, c), self.board))
+                    elif self.board[r - i][c][0] == "b":  # neu quan doi phuong thi append xong break
+                        moves.append(Move((r, c), (r - i, c), self.board))
+                        break
+                    elif self.board[r - i][c][0] == "w":  # neu quan phe minh thi chi break khong append
+                        break
+                elif turn == "b":
+                    if self.board[r - i][c] == "--":  # neu o trong thi append
+                        moves.append(Move((r, c), (r - i, c), self.board))
+                    elif self.board[r - i][c][0] == "w":  # neu quan doi phuong thi append xong break
+                        moves.append(Move((r, c), (r - i, c), self.board))
+                        break
+                    elif self.board[r - i][c][0] == "b":  # neu quan phe minh thi chi break khong append
+                        break
+                else:
+                    break
+
+        # kiem tra col phia ben duoi
+        for i in range(len(self.board[r])):
+            if i == 0:
+                continue
+
+            if (r + i) <= 7:
+                if turn == "w":  # kiem tra turn (phe cua quan co)
+                    if self.board[r + i][c] == "--":  # neu o trong thi append
+                        moves.append(Move((r, c), (r + i, c), self.board))
+                    elif self.board[r + i][c][0] == "b":  # neu quan doi phuong thi append xong break
+                        moves.append(Move((r, c), (r + i, c), self.board))
+                        break
+                    elif self.board[r + i][c][0] == "w":  # neu quan phe minh thi chi break khong append
+                        break
+                elif turn == "b":
+                    if self.board[r + i][c] == "--":  # neu o trong thi append
+                        moves.append(Move((r, c), (r + i, c), self.board))
+                    elif self.board[r + i][c][0] == "w":  # neu quan doi phuong thi append xong break
+                        moves.append(Move((r, c), (r + i, c), self.board))
+                        break
+                    elif self.board[r + i][c][0] == "b":  # neu quan phe minh thi chi break khong append
+                        break
+                else:
+                    break
+
+
+    def getKnightMoves(self, r, c, moves, turn):
+        # huong len tren
+        if (r - 2) >= 0:
+            # neu chua vuot ngoai bien gioi va khong phai la vi tri cua quan dong minh dang o day
+            if c + 1 <= 7 and self.board[r - 2][c + 1][0] != turn:  # sang phai
+                moves.append(Move((r, c), (r - 2, c + 1), self.board))
+
+            if c - 1 >= 0 and self.board[r - 2][c - 1][0] != turn:  # sang trai
+                moves.append(Move((r, c), (r - 2, c - 1), self.board))
+
+        # huong xuong duoi
+        if (r + 2) <= 7:
+            if c + 1 <= 7 and self.board[r + 2][c + 1][0] != turn:  # sang phai
+                moves.append(Move((r, c), (r + 2, c + 1), self.board))
+
+            if c - 1 >= 0 and self.board[r + 2][c - 1][0] != turn:  # sang trai
+                moves.append(Move((r, c), (r + 2, c - 1), self.board))
+
+        # huong sang trai
+        if c - 2 >= 0:
+            if r + 1 <= 7 and self.board[r + 1][c - 2][0] != turn:  # di xuong
+                moves.append(Move((r, c), (r + 1, c - 2), self.board))
+
+            if r - 1 >= 0 and self.board[r - 1][c - 2][0] != turn:  # di len
+                moves.append(Move((r, c), (r - 1, c - 2), self.board))
+
+        # huong sang phai
+        if c + 2 <= 7:
+            if r + 1 <= 7 and self.board[r + 1][c + 2][0] != turn:  # di xuong
+                moves.append(Move((r, c), (r + 1, c + 2), self.board))
+
+            if r - 1 >= 0 and self.board[r - 1][c + 2][0] != turn:  # di len
+                moves.append(Move((r, c), (r - 1, c + 2), self.board))
+
+
+    def getBishopMoves(self, r, c, moves, turn):
+        # row di xuong
+
+        ##col sang trai
+        for i in range(len(self.board)):
+            if i == 0:
+                continue
+
+            if r + i <= 7:
+                if c - i >= 0:
+                    if self.board[r + i][c - i] == "--":
+                        moves.append(Move((r, c), (r + i, c - i), self.board))
+                    elif self.board[r + i][c - i][0] != turn:
+                        moves.append(Move((r, c), (r + i, c - i), self.board))
+                        break
+                    elif self.board[r + i][c - i][0] == turn:
+                        break
+
+        ##col sang phai
+        for i in range(len(self.board)):
+            if i == 0:
+                continue
+
+            if r + i <= 7:
+                if c + i < 7:
+                    if self.board[r + i][c + i] == "--":
+                        moves.append(Move((r, c), (r + i, c + i), self.board))
+                    elif self.board[r + i][c + i][0] != turn:
+                        moves.append(Move((r, c), (r + i, c + i), self.board))
+                        break
+                    elif self.board[r + i][c + i][0] == turn:
+                        break
+
+        # row di len
+        ##col sang trai
+        for i in range(len(self.board)):
+            if i == 0:
+                continue
+
+            if r - i >= 0:
+                if c - i >= 0:
+                    if self.board[r - i][c - i] == "--":
+                        moves.append(Move((r, c), (r - i, c - i), self.board))
+                    elif self.board[r - i][c - i][0] != turn:
+                        moves.append(Move((r, c), (r - i, c - i), self.board))
+                        break
+                    elif self.board[r - i][c - i][0] == turn:
+                        break
+
+        ## col sang phai
+        for i in range(len(self.board)):
+            if i == 0:
+                continue
+
+            if r - i >= 0:
+                if c + i <= 7:
+                    if self.board[r - i][c + i] == "--":
+                        moves.append(Move((r, c), (r - i, c + i), self.board))
+                    elif self.board[r - i][c + i][0] != turn:
+                        moves.append(Move((r, c), (r - i, c + i), self.board))
+                        break
+                    elif self.board[r - i][c + i][0] == turn:
+                        break
+
+
+    def getQueenMoves(self, r, c, moves, turn):
+        # queen = Bishop + Rook
+        self.getRookMoves(r, c, moves, turn)
+        self.getBishopMoves(r, c, moves, turn)
+
+
+    def getKingMoves(self, r, c, moves, turn):
+        # Cac nuoc di co the cua vua
+        directions = [
+            (-1, -1), (-1, 0), (-1, 1),
+            (0, -1), (0, 1),
+            (1, -1), (1, 0), (1, 1)
+        ]
+
+        for dr, dc in directions:
+            new_r, new_c = r + dr, c + dc  # co the khai bao nhieu bien cung luc
+
+            # kiem tra o co ton tai trong ban co
+            if 0 <= new_r <= 7 and 0 <= new_c <= 7:
+                piece = self.board[new_r][new_c]
+
+                # kiem tra neu la o trong hoac co piece doi phuong thi la nuoc di hop le
+                if piece == "--" or piece[0] != turn:
+                    moves.append(Move((r, c), (new_r, new_c), self.board))
 
 
 class Move():

@@ -76,9 +76,12 @@ def main():
                     if move in validMoves:
                         gs.makeMove(move)
                         moveMade = True
+                        sqSelected = ()  # reset user clicks
+                        playerClicks = []  # reset array for next move choice
+                    else:
+                        #reset select piece
+                        playerClicks = [sqSelected]
 
-                    sqSelected = () #reset user clicks
-                    playerClicks = [] #reset array for next move choice
 
             # key handlers
             elif e.type == p.KEYDOWN: #check a key button
