@@ -73,12 +73,13 @@ def main():
                     #     print(i.startRow,i.startCol , i.endRow,i.endCol)
 
                     # check valid moves to make moves
-                    if move in validMoves:
-                        gs.makeMove(move)
-                        moveMade = True
-                        sqSelected = ()  # reset user clicks
-                        playerClicks = []  # reset array for next move choice
-                    else:
+                    for i in range(len(validMoves)):
+                        if move == validMoves[i]:
+                            gs.makeMove(validMoves[i])
+                            moveMade = True
+                            sqSelected = ()  # reset user clicks
+                            playerClicks = []  # reset array for next move choice
+                    if not moveMade:
                         #reset select piece
                         playerClicks = [sqSelected]
 
